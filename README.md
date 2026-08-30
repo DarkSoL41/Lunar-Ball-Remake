@@ -94,4 +94,5 @@ Edit the `levels.dat` levels, view only the table with the game's real graphics
 
 **Remake and level editor:** DarkSoL
 **Discord:** darksol41
+
 If you’d like to support me financially, BTC address: bc1qp476rmcaapl6n6xjvg2la50cfw3kwvxe8sj0m5
