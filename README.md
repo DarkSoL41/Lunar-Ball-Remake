@@ -90,9 +90,42 @@ Edit the `levels.dat` levels, view only the table with the game's real graphics
 
 ---
 
+## Building from source
+
+Sources and scripts live in the `remake/` and `editor/` folders of the repo.
+
+```
+build_release.bat        # builds the game + editor into a release\ folder
+                         # (generates levels.dat, adds SDL2/SDL2_ttf, icons)
+```
+
+Requirements: MSYS2 MinGW-w64 (`g++`), SDL2, and SDL2_ttf.
+
+---
+
 ## Author
 
-**Remake and level editor:** DarkSoL
+**Remake and level editor:** DarkSoL  
 **Discord:** darksol41
 
-If you’d like to support me financially, BTC address: bc1qp476rmcaapl6n6xjvg2la50cfw3kwvxe8sj0m5
+---
+
+## Legal
+
+This is an unofficial, free, non-commercial fan project. It is not affiliated with or
+endorsed by Compile, Pony Canyon or any other rights holder of *Lunar Ball* /
+*Lunar Pool*.
+
+*Lunar Ball* © 1985 Pony Inc., game designed by Compile. The game's name, graphics,
+level layouts, texts and music belong to their respective owners.
+
+**What is in this package.** The program code of the remake and the editor is my own.
+To look and play like the original, the remake contains graphics (tiles and palettes),
+level layouts (`levels.dat`) and on-screen texts taken from the original game. They
+are included for preservation and study only.
+
+**Third-party libraries.** `SDL2.dll` and `SDL2_ttf.dll` are distributed under the zlib
+license (https://www.libsdl.org). `libstdc++-6.dll`, `libgcc_s_seh-1.dll` and
+`libwinpthread-1.dll` are the MinGW-w64 runtime libraries.
+
+No warranty of any kind. If you are a rights holder and want something changed or removed, contact me on Discord (`darksol41`) and I will do it.
