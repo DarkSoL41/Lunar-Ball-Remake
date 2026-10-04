@@ -10,18 +10,40 @@ emulation of the NES 2A03 sound chip.
 
 | File                 | Description                                  |
 |----------------------|----------------------------------------------|
+| `launcher.exe`         | **Start here** — settings and the PLAY button |
 | `lunarball-remake.exe` | The game                                    |
 | `editor.exe`           | The level editor                            |
 | `README.md`            | This file                                   |
 | `levels.dat`           | Data for all 60 levels (v2, per-cell palette) |
-| `SDL2.dll`             | Runtime library (both programs)             |
-| `SDL2_ttf.dll`         | Runtime library (editor)                    |
+| `lunarball.ini`        | Your settings (created by the launcher)     |
+| `editor.ini`           | The editor's window and tool state (created by the editor) |
+| `levels_original.dat`  | The 60 original tables, never changed       |
+| `SDL2.dll`             | Runtime library (all three programs)        |
 
 ---
+
+## The Launcher
+
+Run `launcher.exe`, change what you like and press **PLAY**. Settings are saved
+automatically to `lunarball.ini` next to the game; delete that file to get the
+defaults back. The game also runs fine on its own without the launcher.
+
+| Page         | What you can set |
+|--------------|------------------|
+| **Controls** | Keyboard keys (two per action) and gamepad buttons for Player 1 and Player 2, left stick + dead zone, hotkeys, with a live input test |
+| **Audio**    | Master volume, mute, NES channel mixer (pulse 1/2, triangle, noise), soft filter, latency — plus a sound test that plays every tune and effect of the game |
+| **Video**    | Window / fullscreen, window size, pixel shape (square, NES TV 8:7, stretch), sharp or smooth scaling, whole-number scaling, overscan, scanlines, v-sync — with a preview |
+| **Colours**  | NES palette: Classic, NTSC TV, black & white, or any emulator `.pal` file from the `palettes` folder; brightness / contrast / saturation / hue / gamma; repaint any of the 64 colours — with a live preview of the title, menu and every table |
+| **Game**     | Interface size, light / dark theme (or follow the system), pause when the window is inactive, shortcut to the level editor |
+
+In a 2-player game Player 2 plays with the Player 2 bindings on their turn (and,
+if you leave the option on, with Player 1's as well — handy on one keyboard).
 
 ## The Game
 
 ### Controls
+
+These are the defaults; everything can be rebound in the launcher.
 
 | Key         | Action                                      | Notes |
 |-------------|---------------------------------------------|-------|
@@ -32,6 +54,14 @@ emulation of the NES 2A03 sound chip.
 | **Up / Down** | D-pad Up / Down                          | Cue length |
 | **Left / Right** | D-pad Left / Right                   | Cue rotation |
 | **Esc**     | Quit                                        |       |
+| **P**       | Pause                                       |       |
+| **Tab** (hold) | Fast-forward                             | Speed is set in the launcher |
+| **F11** / **Alt+Enter** | Fullscreen on / off             |       |
+| **F12**     | Screenshot                                  | Saved to `screenshots\` |
+| **M**       | Mute                                        |       |
+
+Player 2 defaults: **W A S D** (D-pad), **G** (A), **F** (B), **R** (Start), **Q** (Select).
+Gamepads work out of the box: D-pad / left stick, A or B to shoot, Start, Back.
 
 ### How to play
 
@@ -48,58 +78,70 @@ emulation of the NES 2A03 sound chip.
 - Palette is stored **per cell** (one palette per 8×8 tile), unlike the NES
   (which shares a palette per 2×2 block) — so pieces are placed exactly 1×1,
   as drawn, and never bleed into neighbours.
-- The audio is quieter (~80% below the original level) for comfortable play.
+- The audio is quieter than the original by default (30% master volume) for
+  comfortable play; change it on the launcher's Audio page.
 
 ---
 
 ## The Level Editor
 
-Edit the `levels.dat` levels, view only the table with the game's real graphics
-(no game HUD), and save your changes.
+Run `editor.exe` (or press **Open the level editor** in the launcher). It opens
+`levels.dat` next to it — the 60 tables the game plays.
 
-### Controls
+You do not paint tiles. You draw the table the way the original game describes
+it — **rail cells** (full or diagonal halves), **felt**, **pockets** and
+**balls** — and the editor builds the rail graphics and the bounce map with a
+port of the original game's own table builder. An edited table therefore looks
+and plays like an original one. **Test play (F5)** runs the real game on your
+level inside the editor, in 1P, 2P or vs CPU.
 
-| Action                      | Keys / Mouse                                                    |
-|-----------------------------|-----------------------------------------------------------------|
-| **Ball** tool (place/select/move balls) | **1** or the **Ball** button                     |
-| **Tile** tool (stamp a tile-set piece) | **2**, or click a tile in the right panel         |
-| Stamp a tile (drag = pencil) | **LMB** + drag                                                |
-| Erase a cell (felt) / remove a ball | **RMB**                                             |
-| Scroll the tile-set          | Mouse wheel over the panel                                    |
-| Toggle tile grid             | **G** or the **Grid** button                                  |
-| Toggle physics (collision) overlay | **M** or the **Physics** button                          |
-| Toggle pixel-perfect scale   | **P** or the **Pixel scale** button (on by default)           |
-| Previous / next level        | **PgUp** / **PgDn**, or the **‹** / **›** buttons              |
-| Drag a ball                  | **LMB** on a ball + drag                                      |
-| Add a new ball               | Double-click on the felt, or **B**, or the **Add ball** button |
-| Nudge the selected ball 1 px | Arrow keys                                                     |
-| Remove a ball                | **RMB** on the ball (in Ball tool), or **Delete** / **Backspace** |
-| Undo (up to 64 steps)        | **Ctrl+Z** or the **Undo** button                             |
-| Save `levels.dat`            | **Ctrl+S** or the **Save** button                             |
-| Quit                         | **Esc**                                                       |
+### Tools
 
-### Tips
+| Key | Tool | What it does (right mouse button = the opposite) |
+|-----|------|--------------------------------------------------|
+| **V** | Select | Drag balls and pockets; drag on the table to select cells, then copy / cut / paste / delete |
+| **W** | Wall | Paint rail cells (brush 1–3) |
+| **D** | Diagonal | Half cells for 45° rails; the solid half follows the cursor or is chosen by hand |
+| **L** | Line | Drag a straight or 45° rail, 1 or 2 cells thick, built like the original diagonal rails |
+| **R** | Rectangle | Drag a complete table (rail frame + felt), a rail frame, a solid block or a patch of felt |
+| **F** | Felt | Paint felt / open space |
+| **G** | Fill | Flood-fill an enclosed area with felt |
+| **P** | Pocket | Add pockets (up to 16); they cut through rails by themselves |
+| **B** | Ball | Place the cue ball and balls 1–7 (**0**–**7** pick one), drag to move, arrow keys nudge |
+| **E** | Erase | Remove rails, pockets and balls under the brush |
 
-- The **TILE SET** panel on the right holds every real cell type that appears in
-  the game, drawn with the actual game graphics (CHR tile + palette). Each entry
-  is the smallest unit — a single 8×8 tile. For example, a full pocket is built
-  from four such tiles.
-- An unsaved-changes dialog appears before closing if there are pending edits.
-- On launch the editor automatically finds `levels.dat` next to itself (in the
-  same `release\` folder); you can also pass the file path as the first argument.
+**Mirror** (left-right, up-down, both) repeats everything you draw on the other
+side — handy for symmetrical tables.
 
----
+### Everything else
 
-## Building from source
+| Action | Keys |
+|--------|------|
+| Zoom / move the view / fit | mouse wheel, **+** **-** / middle button or **Space**+drag / **Home** |
+| Undo / redo | **Ctrl+Z** / **Ctrl+Y** |
+| Copy, cut, paste cells | **Ctrl+C**, **Ctrl+X**, **Ctrl+V** — while pasting **H** / **V** flip, **R** rotates |
+| Previous / next level, all levels | **Page Up** / **Page Down**, **Ctrl+L** |
+| Grid, physics map | **F2**, **F3** |
+| Test play | **F5** (Esc returns, **P** pauses, **F6** restarts) |
+| Save, save as, open, new | **Ctrl+S**, **Ctrl+Shift+S**, **Ctrl+O**, **Ctrl+N** |
+| All shortcuts | **F1** |
 
-Sources and scripts live in the `remake/` and `editor/` folders of the repo.
-
-```
-build_release.bat        # builds the game + editor into a release\ folder
-                         # (generates levels.dat, adds SDL2/SDL2_ttf, icons)
-```
-
-Requirements: MSYS2 MinGW-w64 (`g++`), SDL2, and SDL2_ttf.
+- The panel on the right names the level, copies / pastes / flips / shifts whole
+  tables, brings back the original table, lists the balls and runs a **Check**:
+  balls inside rails or on pockets, unreachable balls, hidden pockets, felt with
+  no rail next to open space. Click a line to see the spot.
+- The **physics map** (F3) shows what the ball really bounces off: red = solid
+  rail, gold = cushion face, blue = pocket / drop.
+- **Theme:** Dark by default; Auto / Dark / Light at the bottom of the window. Auto follows the
+  Windows app mode; the choice is shared with the launcher.
+- Test play uses the keys, gamepads, volume and palette you set in the launcher.
+- The editor remembers its window size and position, zoom, tool options and the
+  last file and level in `editor.ini`; delete that file to start fresh.
+- Saving keeps a `levels.dat.bak` of the previous file. `levels_original.dat`
+  always holds the untouched 60 tables; **New** in the editor also restores them.
+- The file stays readable by older builds: the editor's own data (rail shapes,
+  level names, the pocket list the CPU player aims at) is appended as an extra
+  block that older readers ignore.
 
 ---
 
@@ -124,8 +166,9 @@ To look and play like the original, the remake contains graphics (tiles and pale
 level layouts (`levels.dat`) and on-screen texts taken from the original game. They
 are included for preservation and study only.
 
-**Third-party libraries.** `SDL2.dll` and `SDL2_ttf.dll` are distributed under the zlib
-license (https://www.libsdl.org). `libstdc++-6.dll`, `libgcc_s_seh-1.dll` and
+**Third-party libraries.** `SDL2.dll` is distributed under the zlib
+license (https://www.libsdl.org). The launcher and the editor embed the Inter typeface (SIL Open Font
+License 1.1, https://rsms.me/inter/) and use stb_truetype (public domain). `libstdc++-6.dll`, `libgcc_s_seh-1.dll` and
 `libwinpthread-1.dll` are the MinGW-w64 runtime libraries.
 
 No warranty of any kind. If you are a rights holder and want something changed or removed, contact me on Discord (`darksol41`) and I will do it.
